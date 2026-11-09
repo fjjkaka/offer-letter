@@ -48,7 +48,6 @@ body{
   font-size:17px;line-height:1.6;
   -webkit-font-smoothing:antialiased;overflow-x:hidden;
 }
-body.locked{overflow:hidden;height:100svh}
 ::selection{background:var(--rose-soft)}
 
 /* ---------- atmosphere ---------- */
@@ -78,7 +77,6 @@ main{position:relative;z-index:1}
 .screen{min-height:100vh;min-height:100svh;display:flex;flex-direction:column;justify-content:center;
   width:100%;max-width:640px;margin:0 auto;padding:96px 22px 72px;position:relative}
 .wide{max-width:1080px}
-body:not(.opened) .after{display:none}
 
 /* ---------- type ---------- */
 h1,h2,h3{font-family:"Fraunces",Georgia,serif;font-weight:380;letter-spacing:-.028em;line-height:1.02;margin:0;
@@ -368,7 +366,7 @@ footer{position:relative;z-index:1;text-align:center;padding:10px 22px 40px;font
 }
 </style>
 </head>
-<body class="locked">
+<body>
 
 <div class="blobs" aria-hidden="true"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div></div>
 <div class="grain" aria-hidden="true"></div>
@@ -804,10 +802,7 @@ footer{position:relative;z-index:1;text-align:center;padding:10px 22px 40px;font
   /* ---------- intro ---------- */
   setTimeout(() => $("#stamp").classList.add("on"), reduceMotion ? 0 : 900);
   $("#openBtn").addEventListener("click", () => {
-    document.body.classList.add("opened");
-    document.body.classList.remove("locked");
-    observeAll();
-    requestAnimationFrame(() => requestAnimationFrame(() => $("#report").scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth" })));
+    $("#story").scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth" });
   });
 
   /* ---------- reveal on scroll ---------- */
@@ -1156,7 +1151,6 @@ footer{position:relative;z-index:1;text-align:center;padding:10px 22px 40px;font
 
   /* ---------- setup page ---------- */
   function initSetup() {
-    document.body.classList.remove("locked");
     $("#setup").hidden = false;
     const f = { p: $("#sPlace"), w: $("#sWhen"), d: $("#sDur"), n: $("#sPhone"), t: $("#sTopic") };
     const store = {
