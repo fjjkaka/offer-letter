@@ -692,6 +692,7 @@ footer{position:relative;z-index:1;text-align:center;padding:10px 22px 40px;font
     me: "Harshit",
     her: "Tisha",
     metOn: "2021-12-13",     // the bus ride
+    metAt: "12:00",          // around noon, IST
     place: "[Place]",
     when: null,              // "YYYY-MM-DDTHH:MM" in IST; null = next Saturday 5 PM
     durationMin: 120,
@@ -763,15 +764,20 @@ footer{position:relative;z-index:1;text-align:center;padding:10px 22px 40px;font
   const tFmt = new Intl.DateTimeFormat("en-IN", { timeZone: "Asia/Kolkata", hour: "numeric", minute: "2-digit", hour12: true });
   $$("[data-date]").forEach(el => el.textContent = dFmt.format(startUtc));
   $$("[data-time]").forEach(el => el.textContent = tFmt.format(startUtc).replace(/\s?(am|pm)/i, m => " " + m.trim().toUpperCase()));
-  const istToday = new Date(Date.now() + 330 * 60000).toISOString().slice(0, 10);
-  $("#daysSince").textContent = Math.round((Date.parse(istToday) - Date.parse(CONFIG.metOn)) / 864e5).toLocaleString("en-IN");
+  const metUtc = istToUtc(CONFIG.metOn + "T" + CONFIG.metAt);
+  const renderDays = () => $("#daysSince").textContent = Math.floor((Date.now() - metUtc) / 864e5).toLocaleString("en-IN");
+  renderDays();
 
   /* ---------- live "waiting since" timer (IST wall clock) ---------- */
   function sinceMet() {
     const n = new Date(Date.now() + 330 * 60000);           // IST via UTC getters
     const [sy, sm, sd] = CONFIG.metOn.split("-").map(Number);
+    const [sh, smi] = CONFIG.metAt.split(":").map(Number);
     let y = n.getUTCFullYear() - sy, mo = n.getUTCMonth() + 1 - sm, d = n.getUTCDate() - sd;
-    const h = n.getUTCHours(), mi = n.getUTCMinutes(), s = n.getUTCSeconds();
+    let h = n.getUTCHours() - sh, mi = n.getUTCMinutes() - smi;
+    const s = n.getUTCSeconds();
+    if (mi < 0) { mi += 60; h--; }
+    if (h < 0) { h += 24; d--; }
     if (d < 0) { mo--; d += new Date(Date.UTC(n.getUTCFullYear(), n.getUTCMonth(), 0)).getUTCDate(); }
     if (mo < 0) { y--; mo += 12; }
     return { y, mo, d, h, mi, s };
@@ -786,7 +792,7 @@ footer{position:relative;z-index:1;text-align:center;padding:10px 22px 40px;font
     if (!reduceMotion) { sEl.classList.remove("tick"); void sEl.offsetWidth; sEl.classList.add("tick"); }
   }
   renderTimer();
-  setInterval(renderTimer, 1000);
+  setInterval(() => { renderTimer(); if (new Date().getSeconds() === 0) renderDays(); }, 1000);
   const plural = (v, w) => v + " " + w + (v === 1 ? "" : "s");
   const nowStamp = () => dFmt.format(new Date()) + ", " + tFmt.format(new Date());
   let firstVisit = true;
