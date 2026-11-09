@@ -302,8 +302,22 @@ h1 em,h2 em{font-style:italic;color:var(--rose-deep);font-weight:340}
 .story-body p{margin:0 0 20px;font-family:"Fraunces",Georgia,serif;font-weight:350;font-size:1.22rem;line-height:1.62;color:var(--ink);
   font-variation-settings:"SOFT" 100,"opsz" 18;max-width:34ch;text-wrap:pretty}
 .story-body em{color:var(--rose-deep)}
-.days{display:flex;align-items:baseline;gap:12px;margin:16px 0 0;padding-top:22px;border-top:1px dashed var(--line-2);color:var(--ink-2);font-size:.95rem;max-width:400px}
-.days b{font-family:"Fraunces",serif;font-weight:400;font-size:2.4rem;line-height:1;color:var(--ink);font-variation-settings:"SOFT" 100,"opsz" 72}
+.timer{margin:16px 0 0;padding-top:24px;border-top:1px dashed var(--line-2);max-width:440px}
+.timer-head{display:flex;justify-content:space-between;align-items:center;margin:0 0 14px;font-family:"JetBrains Mono",monospace;font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.timer-head .live{display:inline-flex;align-items:center;gap:7px;color:var(--rose-deep)}
+.timer-head .live::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--rose);animation:pulseDot 1.6s ease-in-out infinite}
+@keyframes pulseDot{50%{opacity:.25}}
+.timer-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.unit{padding:14px 8px 12px;border-radius:18px;background:var(--card);border:1px solid var(--line);box-shadow:0 1px 2px rgba(70,45,35,.04),0 10px 24px -16px rgba(70,45,35,.25);text-align:center}
+.unit b{display:block;font-family:"Fraunces",serif;font-weight:400;font-size:2rem;line-height:1.05;color:var(--ink);font-variant-numeric:tabular-nums;font-variation-settings:"SOFT" 100,"opsz" 72}
+.unit span{display:block;margin-top:4px;font-family:"JetBrains Mono",monospace;font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.unit.sec b{color:var(--rose-deep)}
+.unit.sec b.tick{animation:tick .45s var(--ease)}
+@keyframes tick{from{transform:translateY(-4px);opacity:.4}}
+.timer-foot{margin:14px 0 0;font-size:.95rem;color:var(--ink-2)}
+.timer-foot b{font-weight:600;color:var(--ink)}
+.waited{margin:-6px 0 18px;font-size:.9rem;color:var(--ink-2)}
+@media (min-width:900px){.timer-grid{grid-template-columns:repeat(6,1fr)}.unit b{font-size:1.7rem}}
 .next-ch{margin-top:30px;font-family:"JetBrains Mono",monospace;font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
 .ch2{margin:0 0 18px;font-family:"Fraunces",serif;font-style:italic;font-size:1.12rem;color:var(--rose-deep);font-variation-settings:"SOFT" 100,"opsz" 24}
 .btn-wa{background:var(--sage-deep);color:#fff;box-shadow:0 14px 28px -14px rgba(95,127,92,.8),inset 0 1px 0 rgba(255,255,255,.2)}
@@ -418,7 +432,18 @@ footer{position:relative;z-index:1;text-align:center;padding:10px 22px 40px;font
       <p class="reveal">The ride reached Chandigarh, and we said goodbye with a hug. It was warm, and you were the one who made it so.</p>
       <p class="reveal">I told myself it was infatuation. But some feelings don't fade, and that one is still with me today.</p>
     </div>
-    <p class="days reveal"><b id="daysSince">—</b><span>days since that bus ride.<br>I still remember it.</span></p>
+    <div class="timer reveal" aria-label="Time since 13 December 2021">
+      <p class="timer-head"><span>Waiting since the bus ride</span><span class="live">Live</span></p>
+      <div class="timer-grid">
+        <div class="unit"><b id="tY">0</b><span>Years</span></div>
+        <div class="unit"><b id="tMo">0</b><span>Months</span></div>
+        <div class="unit"><b id="tD">0</b><span>Days</span></div>
+        <div class="unit"><b id="tH">00</b><span>Hours</span></div>
+        <div class="unit"><b id="tMi">00</b><span>Minutes</span></div>
+        <div class="unit sec"><b id="tS">00</b><span>Seconds</span></div>
+      </div>
+      <p class="timer-foot">That's <b id="daysSince">—</b> days. Still counting.</p>
+    </div>
     <p class="next-ch reveal">Chapter 2: not written yet ↓</p>
   </section>
 
@@ -608,6 +633,7 @@ footer{position:relative;z-index:1;text-align:center;padding:10px 22px 40px;font
           <div><dt>Dress code</dt><dd id="dressOut">Comfortable shoes</dd></div>
         </dl>
         <p class="ch2">Chapter 2 begins <span data-date></span>.</p>
+        <p class="waited" id="waited"></p>
         <div class="actions">
           <a class="btn btn-wa wide-btn" id="waBtn" target="_blank" rel="noopener" hidden>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.5 8.5 0 0 1-12.6 7.4L3 20.5l1.6-5.2A8.5 8.5 0 1 1 21 11.5z"/></svg>
@@ -739,6 +765,29 @@ footer{position:relative;z-index:1;text-align:center;padding:10px 22px 40px;font
   $$("[data-time]").forEach(el => el.textContent = tFmt.format(startUtc).replace(/\s?(am|pm)/i, m => " " + m.trim().toUpperCase()));
   const istToday = new Date(Date.now() + 330 * 60000).toISOString().slice(0, 10);
   $("#daysSince").textContent = Math.round((Date.parse(istToday) - Date.parse(CONFIG.metOn)) / 864e5).toLocaleString("en-IN");
+
+  /* ---------- live "waiting since" timer (IST wall clock) ---------- */
+  function sinceMet() {
+    const n = new Date(Date.now() + 330 * 60000);           // IST via UTC getters
+    const [sy, sm, sd] = CONFIG.metOn.split("-").map(Number);
+    let y = n.getUTCFullYear() - sy, mo = n.getUTCMonth() + 1 - sm, d = n.getUTCDate() - sd;
+    const h = n.getUTCHours(), mi = n.getUTCMinutes(), s = n.getUTCSeconds();
+    if (d < 0) { mo--; d += new Date(Date.UTC(n.getUTCFullYear(), n.getUTCMonth(), 0)).getUTCDate(); }
+    if (mo < 0) { y--; mo += 12; }
+    return { y, mo, d, h, mi, s };
+  }
+  const pad = v => String(v).padStart(2, "0");
+  const tEls = { y: $("#tY"), mo: $("#tMo"), d: $("#tD"), h: $("#tH"), mi: $("#tMi"), s: $("#tS") };
+  function renderTimer() {
+    const t = sinceMet();
+    tEls.y.textContent = t.y; tEls.mo.textContent = t.mo; tEls.d.textContent = t.d;
+    tEls.h.textContent = pad(t.h); tEls.mi.textContent = pad(t.mi);
+    const sEl = tEls.s; sEl.textContent = pad(t.s);
+    if (!reduceMotion) { sEl.classList.remove("tick"); void sEl.offsetWidth; sEl.classList.add("tick"); }
+  }
+  renderTimer();
+  setInterval(renderTimer, 1000);
+  const plural = (v, w) => v + " " + w + (v === 1 ? "" : "s");
   const nowStamp = () => dFmt.format(new Date()) + ", " + tFmt.format(new Date());
   let firstVisit = true;
   try { firstVisit = !sessionStorage.getItem("pinged-open"); sessionStorage.setItem("pinged-open", "1"); } catch {}
@@ -998,6 +1047,8 @@ footer{position:relative;z-index:1;text-align:center;padding:10px 22px 40px;font
     $("#resultLede").textContent = acceptedKind === "yes"
       ? "Locked in. Benefits include unlimited chai, a good listener, and a developer who has absolutely over-planned this."
       : "A maybe, with a plan. If it doesn't work for you, just say so and we'll change it (or not, no hard feelings).";
+    const t = sinceMet();
+    $("#waited").textContent = "Waited " + plural(t.y, "year") + ", " + plural(t.mo, "month") + " and " + plural(t.d, "day") + " for this. Worth every second.";
     $("#chooser").hidden = true;
     $("#final").hidden = false;
     $("#result").scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth" });
