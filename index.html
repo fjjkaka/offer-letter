@@ -149,12 +149,6 @@ h1 em,h2 em{font-style:italic;color:var(--rose-deep);font-weight:340}
 .referral em{color:var(--rose-deep)}
 .referral .ref-rec{margin-top:10px;font-family:"DM Sans",sans-serif;font-size:.92rem;color:var(--ink-2)}
 .referral .ref-rec b{font-weight:600;color:var(--ink)}
-.pick{display:inline-flex;gap:4px;margin-top:28px;padding:5px;border-radius:999px;background:rgba(255,255,255,.7);box-shadow:inset 0 0 0 1px var(--line),0 8px 20px -14px rgba(70,45,35,.3)}
-.pick button{appearance:none;border:0;font:inherit;font-size:.95rem;font-weight:500;min-height:44px;padding:0 20px;border-radius:999px;background:transparent;color:var(--ink-2);cursor:pointer;
-  -webkit-tap-highlight-color:transparent;touch-action:manipulation;transition:background-color .3s var(--ease),color .3s,box-shadow .3s}
-.pick button[aria-checked="true"]{background:var(--ink);color:#FFF8F2;box-shadow:0 8px 16px -10px rgba(42,39,48,.7)}
-.pick button:focus-visible{outline:2px solid var(--rose);outline-offset:2px}
-.ask.done .pick{pointer-events:none;opacity:.7}
 .legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:30px}
 .chip{font-size:.8rem;padding:7px 13px;border-radius:999px;background:rgba(255,255,255,.65);box-shadow:inset 0 0 0 1px var(--line);color:var(--ink-2)}
 
@@ -388,7 +382,7 @@ footer{position:relative;z-index:1;text-align:center;padding:10px 22px 40px;font
       <h1>Application<br><em>received.</em></h1>
       <dl class="meta">
         <div><dt>Position</dt><dd class="big">Co-passenger</dd></div>
-        <div><dt>Type</dt><dd>Trial run · one walk or one drive</dd></div>
+        <div><dt>Type</dt><dd>Trial run · one coffee</dd></div>
         <div><dt>Candidate</dt><dd data-me></dd></div>
         <div><dt>Reviewer</dt><dd data-her></dd></div>
       </dl>
@@ -541,7 +535,7 @@ footer{position:relative;z-index:1;text-align:center;padding:10px 22px 40px;font
   <!-- git log -->
   <section class="screen after" id="log" data-step="02 · History">
     <p class="eyebrow sage reveal">Section 02 · Candidate history</p>
-    <h2 class="reveal" style="--d:80ms">Reasons I'm worth <em>a walk.</em></h2>
+    <h2 class="reveal" style="--d:80ms">Reasons I'm worth <em>a coffee.</em></h2>
     <p class="lede reveal" style="--d:160ms">Straight from the repo. Every commit has been tested in production.</p>
     <div class="terminal reveal" id="terminal" style="--d:220ms">
       <div class="term-bar"><i></i><i></i><i></i><span>~/candidate — zsh</span></div>
@@ -561,12 +555,8 @@ footer{position:relative;z-index:1;text-align:center;padding:10px 22px 40px;font
   <!-- The ask -->
   <section class="screen ask after" id="ask" data-step="03 · Final round">
     <p class="eyebrow reveal">Section 03 · Final round</p>
-    <h2 class="reveal" style="--d:80ms" id="askTitle">Up for a walk or a drive <em>with me?</em></h2>
-    <p class="lede reveal" style="--d:160ms">Nothing fancy, no pressure. Fresh air, good conversation, zero HR paperwork.</p>
-    <div class="pick reveal" style="--d:200ms" role="radiogroup" aria-label="Pick one">
-      <button type="button" role="radio" aria-checked="true" data-plan="walk">🚶 A walk</button>
-      <button type="button" role="radio" aria-checked="false" data-plan="drive">🚗 A drive</button>
-    </div>
+    <h2 class="reveal" style="--d:80ms" id="askTitle">Up for a coffee <em>with me?</em></h2>
+    <p class="lede reveal" style="--d:160ms">Nothing fancy, no pressure. One coffee, good conversation, zero HR paperwork.</p>
     <div class="arena reveal" id="arena" style="--d:240ms">
       <div class="pair">
         <button class="btn btn-yes" id="yesBtn">Yes <span class="heart">♥</span></button>
@@ -611,7 +601,7 @@ footer{position:relative;z-index:1;text-align:center;padding:10px 22px 40px;font
 
       <div id="final" hidden>
         <dl class="meta">
-          <div><dt>Plan</dt><dd class="big" id="planOut">A walk</dd></div>
+          <div><dt>Plan</dt><dd class="big" id="planOut">Coffee ☕</dd></div>
           <div><dt>Meeting point</dt><dd data-place></dd></div>
           <div><dt>Date</dt><dd data-date></dd></div>
           <div><dt>Time</dt><dd data-time></dd></div>
@@ -753,7 +743,7 @@ footer{position:relative;z-index:1;text-align:center;padding:10px 22px 40px;font
   let firstVisit = true;
   try { firstVisit = !sessionStorage.getItem("pinged-open"); sessionStorage.setItem("pinged-open", "1"); } catch {}
   if (firstVisit) ping(herName + " opened the page", "📬 " + nowStamp(), ["envelope"], 3);
-  if (herName) $("#askTitle").innerHTML = `${escapeHtml(herName)}, up for a walk or a drive <em>with me?</em>`;
+  if (herName) $("#askTitle").innerHTML = `${escapeHtml(herName)}, up for a coffee <em>with me?</em>`;
   $("#ref").textContent = "Ref · APP-" + new Date().getFullYear() + "-" + String(hashCode(cfg.me + herName) % 9000 + 1000);
 
   /* ---------- intro ---------- */
@@ -813,20 +803,20 @@ footer{position:relative;z-index:1;text-align:center;padding:10px 22px 40px;font
     ["Reconsider?", "Have you tried turning your answer off and on again?"],
     ["Not in the policy", "Clause 4.2: 'No' requires a manager's sign-off."],
     ["Escalating…", "Manager (also you) is reviewing the request."],
+    ["Error 404", "'No' not found. Did you mean 'Yes'?"],
+    ["Bias detected", "Psych grad, you know this is just status quo bias talking."],
+    ["Pending review", "Your 'No' is in a queue of one. Processing time: forever."],
+    ["Coffee's on me", "Did I mention I'm paying? And I'll let you pick the café."],
+    ["Wrong button?", "Happens to the best of us. The pink one is right there."],
+    ["Low battery 🔋", "This button is running out of energy. So is my ego."],
+    ["It's just coffee", "Twenty minutes. If it's boring, you can leave. I'll even hold the door."],
+    ["Last chance…", "After this, HR gets involved. HR is also you."],
   ];
   let tries = 0, maybe = false, lastDodge = 0, accepted = false;
-  const PLANS = {
-    walk:  { label: "a walk",  out: "A walk 🚶",  dress: "Comfortable shoes",   title: "Walk with " + cfg.me + " 🚶",
-             places: ["A quiet park", "Café, then a walk", "Somewhere near you", "Surprise me"] },
-    drive: { label: "a drive", out: "A drive 🚗", dress: "Bring your playlist", title: "Drive with " + cfg.me + " 🚗",
-             places: ["Long drive, no destination", "Highway + chai stop", "Somewhere near you", "Surprise me"] },
+  const plan = {
+    label: "coffee", out: "Coffee ☕", dress: "Whatever feels comfortable", title: "Coffee with " + cfg.me + " ☕",
+    places: ["A quiet café", "Your favourite café", "Somewhere near you", "Surprise me"],
   };
-  let plan = PLANS.walk;
-  $$(".pick button").forEach(b => b.addEventListener("click", () => {
-    if (accepted) return;
-    $$(".pick button").forEach(x => x.setAttribute("aria-checked", String(x === b)));
-    plan = PLANS[b.dataset.plan];
-  }));
 
   function homeNo() {
     noBtn.style.left = slot.offsetLeft + "px";
@@ -845,6 +835,7 @@ footer{position:relative;z-index:1;text-align:center;padding:10px 22px 40px;font
     if (now - lastDodge < 250) return;
     lastDodge = now;
     tries++;
+    if (tries === 1) slot.style.display = "none"; // let Yes take the centre
 
     if (tries > lines.length) {
       maybe = true;
@@ -863,7 +854,7 @@ footer{position:relative;z-index:1;text-align:center;padding:10px 22px 40px;font
     noBtn.textContent = label;
     hint.textContent = joke;
     noBtn.style.setProperty("--s", Math.max(.62, 1 - tries * .08));
-    yesBtn.style.setProperty("--grow", 1 + tries * .06);
+    yesBtn.style.setProperty("--grow", Math.min(1.35, 1 + tries * .04));
 
     requestAnimationFrame(() => {
       const W = arena.clientWidth, H = arena.clientHeight;
@@ -1101,7 +1092,7 @@ footer{position:relative;z-index:1;text-align:center;padding:10px 22px 40px;font
   const hi = herName || "there";
   console.log("%cIn the spirit of honesty: opening this page and your answer send Harshit a notification. Nothing else is collected.", "font:12px 'DM Sans',sans-serif;color:#8E8792");
   console.log(`%cHi ${hi} 👋`, "font:italic 400 32px Fraunces,Georgia,serif;color:#BF5B54;padding:8px 0");
-  console.log("%cYou opened DevTools on an invite for a walk. That's honestly the most attractive thing you could have done.", "font:15px 'DM Sans',sans-serif;color:#2A2730");
+  console.log("%cYou opened DevTools on an invite for coffee. That's honestly the most attractive thing you could have done.", "font:15px 'DM Sans',sans-serif;color:#2A2730");
   console.log("%cNo trackers, no analytics, no frameworks. Just one HTML file and a slightly nervous developer.\nThe No button isn't a bug, it's a feature. The 'tell me in person' option is real, though. Always.", "font:13px 'DM Sans',sans-serif;color:#5B5561;line-height:1.6");
   console.log("%c$ git commit -m \"hoping Tisha says yes\"", "font:12px 'JetBrains Mono',monospace;color:#5F7F5C;background:#DFE9DB;padding:6px 10px;border-radius:6px");
   console.log("%c— Harshit", "font:italic 16px Fraunces,Georgia,serif;color:#2A2730");
