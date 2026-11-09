@@ -20,7 +20,6 @@ You get a notification when she:
 - opens the page (once per visit)
 - taps **Yes** or **Okay, maybe**
 - confirms her pick of place, day and time
-- taps **or just tell me in person**
 
 ## Make the private link
 
